@@ -11,7 +11,8 @@ video=cv2.VideoCapture(0)
 n=10
 correct_position=None
 
-threshold=45 # for eye ear distance
+threshold1=45 # minimum range for eye ear distance 
+threshold2=57 # maximum range for eye ear distance
 while True:
   suc,img=video.read()
   img1=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
@@ -43,7 +44,7 @@ while True:
       l_eye_y=left_eye.y
       left_eye_ear_dist=((((l_eye_x-l_ear_x)**2)*w*w) + (((l_eye_y-l_ear_y)**2)*h*h))**(0.5)
       right_eye_ear_dist=((((r_eye_x-r_ear_x)**2)*w*w) + (((r_eye_y-r_ear_y)**2)*h*h))**(0.5)
-
+      print(left_eye_ear_dist)
       if right_ear.x > right_eye.x or left_ear.x < left_eye.x or right_eye.y>=right_ear.y:
         correct_position=False
         if right_ear.x > right_eye.x:
@@ -56,18 +57,18 @@ while True:
         winsound.Beep(1000,500)
         sentence="Unauthorized activity detected."
       else:
-        c=(0,255,0)
-        sentence=f'{n} chances to continue the exam'
-        if left_eye_ear_dist<threshold or right_eye_ear_dist<threshold:
+        c=(72,114,0)
+        sentence=f'{n} chances to continue the Interview'
+        if left_eye_ear_dist<threshold1 or left_eye_ear_dist>threshold2 or right_eye_ear_dist<threshold1 or right_eye_ear_dist>threshold2:
           c=(0,0,255)
           sentence='Eye is not aligned straight'
-          
+          # winsound.Beep(1000,500)
 
       
       if int(right_ear.x*w)<lx or int(left_ear.x*w)>rx or int(mouth_center.y*h)>ry or int(left_eye.y*h)<ly or int(right_eye.y*h)<ly:
         c=(0,0,255)
         sentence="Face not aligned properly"
-        if right_ear.x > right_eye.x or left_ear.x < left_eye.x or right_eye.y>=right_ear.y or left_eye_ear_dist<threshold or right_eye_ear_dist<threshold:
+        if right_ear.x > right_eye.x or left_ear.x < left_eye.x or right_eye.y>=right_ear.y or left_eye_ear_dist<threshold1 or left_eye_ear_dist>threshold2 or right_eye_ear_dist<threshold1 or right_eye_ear_dist>threshold2:
           sentence="Unauthorized activity detected."
 
       
