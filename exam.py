@@ -8,7 +8,7 @@ mpdrawings=mp.solutions.drawing_utils
 
 faces=mpfaces.FaceDetection()
 video=cv2.VideoCapture(0)
-n=10
+n=4
 correct_position=None
 
 threshold1=45 # minimum range for eye ear distance 
@@ -80,15 +80,15 @@ while True:
       if n==0:
         c=(255,255,255)
         sentence="Distraction Limit Exceeded"
-      mpdrawings.draw_detection(img,detection)
-    cv2.rectangle(img,(lx,ly),(rx,ry),c,3)
-    cv2.putText(img,sentence,(30,30),fontFace=cv2.FONT_HERSHEY_SIMPLEX,fontScale=0.9,color=c,thickness=3)
-    if n==0:
-      img=cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
-      cv2.imshow('EXAM',img)
-      cv2.waitKey(4500)
-      pg.press('q')
-      break
+      # mpdrawings.draw_detection(img,detection)
+  cv2.rectangle(img,(lx,ly),(rx,ry),c,3)
+  cv2.putText(img,sentence,(30,30),fontFace=cv2.FONT_HERSHEY_SIMPLEX,fontScale=0.9,color=c,thickness=3)
+  if n==0:
+    img=cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+    cv2.imshow('EXAM',img)
+    cv2.waitKey(3800)
+    pg.press('q')
+    break
   cv2.imshow('EXAM',img)
   if cv2.waitKey(1) & 0XFF==ord('q'):
     break
