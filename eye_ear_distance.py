@@ -1,5 +1,3 @@
-# This is the project for tracking the interview procedure whether the person is cheating or not
-
 import mediapipe as mp
 import cv2
 
