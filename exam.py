@@ -7,12 +7,13 @@ mpfaces=mp.solutions.face_detection
 mpdrawings=mp.solutions.drawing_utils
 
 faces=mpfaces.FaceDetection()
-video=cv2.VideoCapture(0)
 n=5 #face movement 
 correct_position=None
 
 threshold1=45 # minimum range for eye ear distance 
 threshold2=60 # maximum range for eye ear distance
+
+video=cv2.VideoCapture(0)
 while True:
   suc,img=video.read()
   img1=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
