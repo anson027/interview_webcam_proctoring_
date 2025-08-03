@@ -40,7 +40,7 @@ def detection_findings(img):
   findings_dict['status']=status
   return findings_dict
 
-
+sentence=''
 video=cv2.VideoCapture(0)
 num=0
 l=[]
@@ -57,21 +57,29 @@ while True:
   else:
     l_eye_ear_dist=findings_dict['l_eye_ear_dist']
     r_eye_ear_dist=findings_dict['r_eye_ear_dist']
+    r_ear_x=findings_dict['r_ear_x']
+    r_ear_y=findings_dict['r_ear_y']
     r_eye_x=findings_dict['r_eye_x']
+    r_eye_y=findings_dict['r_eye_y']
+    l_ear_x=findings_dict['l_ear_x']
+    l_ear_y=findings_dict['l_ear_y']
     l_eye_x=findings_dict['l_eye_x']
-    if abs(l_eye_ear_dist-r_eye_ear_dist)>5: # to avoid the customized format of eye and year distance
+    l_eye_y=findings_dict['l_eye_y']
+    if abs(l_eye_ear_dist-r_eye_ear_dist)>5 or r_eye_y>=r_ear_y or l_eye_y>=l_ear_y: # to avoid the customized format of eye and year distance
       sentence='Look into the camera'
       c=(0,0,255)
       pass
-    elif abs(l_eye_ear_dist-r_eye_ear_dist)<5 and r_eye_x*w>lx and l_eye_x*w<rx :
-      sentence='Analyzing your facial geometry'
+    elif abs(l_eye_ear_dist-r_eye_ear_dist)<5 and r_eye_x*w>lx and l_eye_x*w<rx and 15<(r_ear_y-r_eye_y)*h<30 and 15<(l_ear_y-l_eye_y)*h<30:
+      sentence='Maintain a distance from the camera'
       c=(72,114,0)
-      l.append((l_eye_ear_dist+r_eye_ear_dist)/2)
+      dist=(l_eye_ear_dist+r_eye_ear_dist)/2
+      l.append(dist)
+      print(dist)
       num+=1
-    cv2.line(img, (lx, scan_y), (rx, scan_y), (0, 255, 255), 2)
-    scan_y += direction * 2
-    if scan_y >= ry or scan_y <= ly:
-      direction *= -1 
+    cv2.line(img,(lx,scan_y),(rx,scan_y),(0,255,255),2)
+    scan_y+=direction*2
+    if scan_y>=ry or scan_y<=ly:
+      direction*=-1 
   cv2.putText(img,sentence,(30,30),cv2.FONT_HERSHEY_SIMPLEX,0.9,c,thickness=3)
   cv2.rectangle(img,(lx,ly),(rx,ry),c,3)
   cv2.imshow("Image",img)
@@ -125,11 +133,9 @@ while True:
     else:
       c=(72,114,0)
       sentence=f'{n} chances to continue the Interview'
-      if l_eye_ear_dist<threshold1 or l_eye_ear_dist>threshold2 or r_eye_ear_dist<threshold1 or r_eye_ear_dist>threshold2:
+      if l_eye_ear_dist<threshold1 or l_eye_ear_dist>threshold2+10 or r_eye_ear_dist<threshold1 or r_eye_ear_dist>threshold2:
         c=(0,0,255)
         sentence='Eye is not aligned straight'
-        # winsound.Beep(1000,500)
-
       
       if int(r_ear_x*w)<lx or int(l_ear_x*w)>rx or int(mouth_y*h)>ry or int(l_eye_y*h)<ly or int(r_eye_y*h)<ly:
         c=(0,0,255)
@@ -137,16 +143,13 @@ while True:
         if r_ear_x > r_eye_x or l_ear_x < l_eye_x or r_eye_y>=r_ear_y or l_eye_ear_dist<threshold1 or l_eye_ear_dist>threshold2 or r_eye_ear_dist<threshold1 or r_eye_ear_dist>threshold2:
           sentence="Unauthorized activity detected."
 
-      
       if correct_position==False and r_ear_x < r_eye_x and l_ear_x > l_eye_x and r_eye_y < r_ear_y:
         correct_position=True
         n-=1
 
-      
       if n==0:
         c=(255,255,255)
         sentence="Distraction Limit Exceeded"
-      # mpdrawings.draw_detection(img,detection)
   cv2.rectangle(img,(lx,ly),(rx,ry),c,3)
   cv2.putText(img,sentence,(30,30),fontFace=cv2.FONT_HERSHEY_SIMPLEX,fontScale=0.9,color=c,thickness=3)
   if n==0:
