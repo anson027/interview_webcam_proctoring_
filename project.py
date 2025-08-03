@@ -50,28 +50,30 @@ while True:
   suc,img=video.read()
   lx,ly,rx,ry=245,150,490,400
   findings_dict=detection_findings(img)
+  h,w,_=img.shape
   if findings_dict['status']==False:
     c=(0,0,255)
     sentence='No face detected'
   else:
     l_eye_ear_dist=findings_dict['l_eye_ear_dist']
     r_eye_ear_dist=findings_dict['r_eye_ear_dist']
+    r_eye_x=findings_dict['r_eye_x']
+    l_eye_x=findings_dict['l_eye_x']
     if abs(l_eye_ear_dist-r_eye_ear_dist)>5: # to avoid the customized format of eye and year distance
       sentence='Look into the camera'
       c=(0,0,255)
       pass
-    else:
-      sentence='Move your head frontward and backward'
+    elif abs(l_eye_ear_dist-r_eye_ear_dist)<5 and r_eye_x*w>lx and l_eye_x*w<rx :
+      sentence='Analyzing your facial geometry'
       c=(72,114,0)
       l.append((l_eye_ear_dist+r_eye_ear_dist)/2)
       num+=1
+    cv2.line(img, (lx, scan_y), (rx, scan_y), (0, 255, 255), 2)
+    scan_y += direction * 2
+    if scan_y >= ry or scan_y <= ly:
+      direction *= -1 
   cv2.putText(img,sentence,(30,30),cv2.FONT_HERSHEY_SIMPLEX,0.9,c,thickness=3)
   cv2.rectangle(img,(lx,ly),(rx,ry),c,3)
-  cv2.line(img, (lx, scan_y), (rx, scan_y), (0, 255, 255), 2)
-
-  scan_y += direction * 2
-  if scan_y >= ry or scan_y <= ly:
-    direction *= -1 
   cv2.imshow("Image",img)
   if cv2.waitKey(1) & 0XFF==113:
     break
