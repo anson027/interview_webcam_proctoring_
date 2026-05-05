@@ -81,10 +81,13 @@ while True:
     scan_y+=direction*2
     if scan_y>=ry or scan_y<=ly:
       direction*=-1 
+  if num>200:
+    sentence='Press "c" to continue'
+    c=(0,0,0)
   cv2.putText(img,sentence,(30,30),cv2.FONT_HERSHEY_SIMPLEX,0.9,c,thickness=3)
   cv2.rectangle(img,(lx,ly),(rx,ry),c,3)
   cv2.imshow("Image",img)
-  if cv2.waitKey(1) & 0XFF==113:
+  if cv2.waitKey(1) & 0XFF==ord('c'):
     break
 video.release()
 cv2.destroyAllWindows()
