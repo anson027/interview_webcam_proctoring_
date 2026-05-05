@@ -3,6 +3,7 @@ import pyautogui as pg
 import cv2
 import winsound
 
+
 mpfaces=mp.solutions.face_detection
 mpdrawings=mp.solutions.drawing_utils
 
@@ -65,7 +66,7 @@ while True:
     l_ear_y=findings_dict['l_ear_y']
     l_eye_x=findings_dict['l_eye_x']
     l_eye_y=findings_dict['l_eye_y']
-    if abs(l_eye_ear_dist-r_eye_ear_dist)>5 or r_eye_y>=r_ear_y or l_eye_y>=l_ear_y: # to avoid the customized format of eye and year distance
+    if abs(l_eye_ear_dist-r_eye_ear_dist)>5 or r_eye_y>=r_ear_y or l_eye_y>=l_ear_y: # to avoid the customized format of eye and ear distance
       sentence='Look into the camera'
       c=(0,0,255)
       pass
